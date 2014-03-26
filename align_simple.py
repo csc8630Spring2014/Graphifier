@@ -4,24 +4,26 @@ class align_simple:
         self.alignmentmatrix = []
         self.route = []
 
-    def getSequences(self, filelocation, filelocation2):
-        checkFile = open(filelocation)
-        for line in checkFile:
-            if line[:1] == ">":
-                continue
-            else:
-                self.seq1 = line
-        checkFile = open(filelocation2)
-        for line in checkFile:
-            if line[:1] == ">":
-                continue
-            else:
-                self.seq2 = line
+    def startAlignment(self, sequence1, sequence2):
+            self.alignmentmatrix = []
+            self.route = []
+            self.seq1 = sequence1
+            self.seq2 = sequence2
+            self.initMatrix(0)
+            self.match()
+            self.sumscore()
+            self.route = self.findRoute(dynpro.route,
+            len(dynpro.alignmentmatrix) - 1,
+            len(dynpro.alignmentmatrix[0]) - 1)
+            self.reverseRoute()
+            self.printmatrix()
+            self.printRoute()
+            self.createAlignment()
 
     def initMatrix(self, init):
         start_score = score(0)
-        self.seq1 = self.seq1[0:-1]
-        self.seq2 = self.seq2[0:-1]
+        self.seq1 = self.seq1[0:]
+        self.seq2 = self.seq2[0:]
         for char1 in self.seq1:
 #            print("new x")
             tempList = []
@@ -44,7 +46,7 @@ class align_simple:
     def put(self, i, j, value):
         self.alignmentmatrix[i][j] = value
 
-    def align(self):
+    def match(self):
         for i in range(0, len(self.seq1)):
             for j in range(0, len(self.seq2)):
                 #tempScore = score(self.alignmentmatrix[i][j].getScore())
@@ -122,20 +124,20 @@ class align_simple:
         print "sumAfter - End sumAfter"
         self.printmatrix()
 
-    def findRoute(self, temproute, xIndex, yIndex):
+    def findRoute(self, tempFoundRoute, xIndex, yIndex):
         print "findRoute - ", xIndex, yIndex
         if ((xIndex == 0) and (yIndex == 0)):
             print "findroute - 0,0"
-            temproute.append([0, 0])
+            tempFoundRoute.append([0, 0])
         elif (xIndex == 0):
             print "findRoute - 0,y"
-            temproute.append([xIndex, yIndex])
-            temproute = (self.findRoute(temproute,
+            tempFoundRoute.append([xIndex, yIndex])
+            tempFoundRoute = (self.findRoute(tempFoundRoute,
             xIndex, yIndex - 1))
         elif (yIndex == 0):
             print"findRoute - x,0"
-            temproute.append([xIndex, yIndex])
-            temproute = (self.findRoute(temproute,
+            tempFoundRoute.append([xIndex, yIndex])
+            tempFoundRoute = (self.findRoute(tempFoundRoute,
             xIndex - 1, yIndex))
         else:
             print ("findRoute - getting score of [" + str(xIndex) + "," +
@@ -150,36 +152,38 @@ class align_simple:
             if ((left > above) and (left > diag)):
                 print ("findRoute - LEFT is best, adding [" + str(xIndex - 1) +
                  "," + str(yIndex) + "]")
-                temproute.append([xIndex, yIndex])
-                temproute = self.findRoute(temproute,
+                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute = self.findRoute(tempFoundRoute,
                 xIndex, (yIndex - 1))
             elif ((above > left) and (above > diag)):
                 print ("findRoute - ABOVE is best, adding [" + str(xIndex) +
                 "," + str(yIndex - 1) + "]")
-                temproute.append([xIndex, yIndex])
-                temproute = self.findRoute(temproute,
+                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute = self.findRoute(tempFoundRoute,
                 (xIndex - 1), yIndex)
             elif ((diag >= left) and (diag >= above)):
                 print ("findRoute - DIAG is best, adding [" + str(xIndex - 1) +
                 "," + str(yIndex - 1) + "]")
-                temproute.append([xIndex, yIndex])
-                temproute = self.findRoute(temproute,
+                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute = self.findRoute(tempFoundRoute,
                 (xIndex - 1), (yIndex - 1))
             elif ((above == left) and (above > diag)):
                 print "findRoute - TIE is best"
-                temproute.append([xIndex, yIndex])
-                temproute = self.betterRoute(temproute, xIndex, yIndex)
-                print "temproute-", temproute
+                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute = self.betterRoute(tempFoundRoute, xIndex,
+                yIndex)
+                print "tempFoundRoute-", tempFoundRoute
             else:
                 print "This shouldnt happen"
-        return temproute
+        print "returning ************", tempFoundRoute
+        return tempFoundRoute
 
-    def betterRoute(self, temproute, startX, startY):
-        temproute1 = temproute[:]
+    def betterRoute(self, tempBetterRoute, startX, startY):
+        BetterRoute = tempBetterRoute[:]
         print ("better route - routing from: " + str(startX) + "," +
         str(startY))
-        route1 = self.findRoute(temproute, startX - 1, startY)
-        route2 = self.findRoute(temproute1, startX, startY - 1)
+        route1 = self.findRoute(tempBetterRoute, startX - 1, startY)
+        route2 = self.findRoute(BetterRoute, startX, startY - 1)
         max1 = self.getMax(route1)
         max2 = self.getMax(route2)
         print "Comparing Route maxes - 1: " + str(max1) + " 2: " + str(max2)
@@ -258,16 +262,4 @@ class score:
 
 
 dynpro = align_simple()
-dynpro.getSequences('./align1', './align2')
-dynpro.initMatrix(0)
-dynpro.printmatrix()
-dynpro.align()
-dynpro.printmatrix()
-dynpro.sumscore()
-dynpro.printmatrix()
-dynpro.findRoute(dynpro.route, len(dynpro.alignmentmatrix) - 1,
-len(dynpro.alignmentmatrix[0]) - 1)
-dynpro.reverseRoute()
-dynpro.printmatrix()
-dynpro.printRoute()
-dynpro.createAlignment()
+dynpro.startAlignment("ATCT", "ATCT")
