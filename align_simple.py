@@ -230,15 +230,30 @@ class align_simple:
             print "v1: " + str(self.route[i + 1][0] - 1) + " v2: " + str(self.
             route[i + 1][1] - 1)
             if (self.route[i][0] == self.route[i + 1][0] - 1):
-                print "s1 is adding " + str(self.seq1[self.route[i + 1][0]])
-                self.alseq1 += self.seq1[self.route[i + 1][0]]
+                print "s1 is adding " + str(self.seq1[self.route[i][0]])
+                self.alseq1 += self.seq1[self.route[i][0]]
             elif (self.route[i][0] == self.route[i + 1][0]):
                 self.alseq1 += "*"
             else:
                 print "idk"
             if (self.route[i][1] == self.route[i + 1][1] - 1):
-                print "s2 is adding " + str(self.seq2[self.route[i + 1][1]])
-                self.alseq2 += self.seq2[self.route[i + 1][1]]
+                print "s2 is adding " + str(self.seq2[self.route[i][1]])
+                self.alseq2 += self.seq2[self.route[i][1]]
+            elif (self.route[i][1] == self.route[i + 1][1]):
+                self.alseq2 += "*"
+            else:
+                print "idk"
+            if (len(self.route) == 1+1):
+                if (self.route[i][0] == self.route[i + 1][0] - 1):
+                print "s1 is adding " + str(self.seq1[self.route[i][0]])
+                self.alseq1 += self.seq1[self.route[i][0]]
+            elif (self.route[i][0] == self.route[i + 1][0]):
+                self.alseq1 += "*"
+            else:
+                print "idk"
+            if (self.route[i][1] == self.route[i + 1][1] - 1):
+                print "s2 is adding " + str(self.seq2[self.route[i][1]])
+                self.alseq2 += self.seq2[self.route[i][1]]
             elif (self.route[i][1] == self.route[i + 1][1]):
                 self.alseq2 += "*"
             else:
