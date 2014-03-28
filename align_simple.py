@@ -3,6 +3,44 @@ class align_simple:
     def __init__(self):
         self.alignmentmatrix = []
         self.route = []
+        self.scoreIndex = {'A': 0, 'R': 1, 'N': 2, 'D': 3, 'C': 4, 'Q': 5,
+            'E': 6, 'G': 7, 'H': 8, 'I': 9, 'L': 10, 'K': 11, 'M': 12, 'F': 13,
+            'P': 14, 'S': 15, 'T': 16, 'W': 17, 'Y': 18, 'V': 19, 'B': 20,
+            'Z': 21, 'X': 22, '*': 23}
+        self.scores = [[4, -1, -2, -2, 0, -1, -1, 0, -2, -1, -1, -1, -1, -2,
+            -1, 1, 0, -3, -2, 0, -2, -1, 0, -4], [1, 5, 0, -2, -3, 1, 0,
+            -2, 0, -3, -2, 2, -1, -3, -2, -1, -1, -3, -2, -3, -1, 0, -1, -4], [
+            2, 0, 6, 1, -3, 0, 0, 0, 1, -3, -3, 0, -2, -3, -2, 1, 0, -4, -2, -3,
+            3, 0, -1, -4], [-2, -2, 1, 6, -3, 0, 2, -1, -1, -3, -4, -1,
+            -3, -3, -1, 0, -1, -4, -3, -3, 4, 1, -1, -4], [0, -3, -3, -3, 9,
+             -3, -4, -3, -3, -1, -1, -3, -1, -2, -3, -1, -1, -2, -2, -1, -3, -3,
+            -2, -4], [-1, 1, 0, 0, -3, 5, 2, -2, 0, -3, -2, 1,
+            0, -3, -1, 0, -1, -2, -1, -2, 0, 3, -1, -4], [-1, 0, 0, 2, -4, 2,
+            5, -2, 0, -3, -3, 1, -2, -3, -1, 0, -1, -3, -2, -2, 1, 4, -1, -4],
+            [0, -2, 0, -1, -3, -2, -2, 6, -2, -4, -4, -2, -3, -3, -2, 0, -2,
+            -2, -3, -3, -1, -2, -1, -4], [-2, 0, 1, -1, -3, 0, 0, -2, 8, -3,
+            -3, -1, -2, -1, -2, -1, -2, -2, 2, -3, 0, 0, -1, -4], [-1, -3, -3,
+            -3, -1, -3, -3, -4, -3, 4, 2, -3, 1, 0, -3, -2, -1, -3, -1, 3, -3,
+            -3, -1, -4], [-1, -2, -3, -4, -1, -2, -3, -4, -3, 2, 4, -2, 2, 0,
+            -3, -2, -1, -2, -1, 1, -4, -3, -1, -4], [-1, 2, 0, -1, -3, 1, 1,
+            -2, -1, -3, -2, 5, -1, -3, -1, 0, -1, -3, -2, -2, 0, 1, -1, -4],
+            [-1, -1, -2, -3, -1, 0, -2, -3, -2, 1, 2, -1, 5, 0, -2, -1, -1, -1,
+            -1, 1, -3, -1, -1, -4], [-2, -3, -3, -3, -2, -3, -3, -3, -1, 0, 0,
+            -3, 0, 6, -4, -2, -2, 1, 3, -1, -3, -3, -1, -4], [-1, -2, -2, -1,
+            -3, -1, -1, -2, -2, -3, -3, -1, -2, -4, 7, -1, -1, -4, -3, -2, -2,
+            -1, -2, -4], [1, -1, 1, 0, -1, 0, 0, 0, -1, -2, -2, 0, -1, -2, -1,
+            4, 1, -3, -2, -2, 0, 0, 0, -4], [0, -1, 0, -1, -1, -1, -1, -2, -2,
+            -1, -1, -1, -1, -2, -1, 1, 5, -2, -2, 0, -1, -1, 0, -4], [-3, -3,
+            -4, -4, -2, -2, -3, -2, -2, -3, -2, -3, -1, 1, -4, -3, -2, 11, 2,
+            -3, -4, -3, -2, -4], [-2, -2, -2, -3, -2, -1, -2, -3, 2, -1, -1,
+            -2, -1, 3, -3, -2, -2, 2, 7, -1, -3, -2, -1, -4], [0, -3, -3, -3,
+            -1, -2, -2, -3, -3, 3, 1, -2, 1, -1, -2, -2, 0, -3, -1, 4, -3, -2,
+            -1, -4], [-2, -1, 3, 4, -3, 0, 1, -1, 0, -3, -4, 0, -3, -3, -2, 0,
+            -1, -4, -3, -3, 4, 1, -1, -4], [-1, 0, 0, 1, -3, 3, 4, -2, 0, -3,
+            -3, 1, -1, -3, -1, 0, -1, -3, -2, -2, 1, 4, -1, -4], [0, -1, -1,
+            -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 0, 0, -2, -1, -1,
+            -1, -1, -1, -4], [-4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4,
+            -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, 1]]
 
     def startAlignment(self, sequence1, sequence2):
             self.alignmentmatrix = []
@@ -12,9 +50,9 @@ class align_simple:
             self.initMatrix(0)
             self.match()
             self.sumscore()
-            self.route = self.findRoute(dynpro.route,
-            len(dynpro.alignmentmatrix) - 1,
-            len(dynpro.alignmentmatrix[0]) - 1)
+            self.route = self.findRoute(self.route,
+            len(self.alignmentmatrix) - 1,
+            len(self.alignmentmatrix[0]) - 1)
             self.reverseRoute()
             self.printmatrix()
             self.printRoute()
@@ -22,15 +60,15 @@ class align_simple:
 
     def initMatrix(self, init):
         start_score = score(0)
-        self.seq1 = self.seq1[0:]
-        self.seq2 = self.seq2[0:]
-        for char1 in self.seq1:
+        print str(len(self.seq1)), str(len(self.seq2))
+        for char1 in range(0, len(self.seq1) + 1):
 #            print("new x")
             tempList = []
-            for char2 in self.seq2:
+            for char2 in range(0, len(self.seq2) + 1):
 #                print("new y")
                 tempList.append(start_score)
             self.alignmentmatrix.append(tempList)
+        self.printmatrix()
 
     def printmatrix(self):
         for char1 in range(0, len(self.alignmentmatrix)):
@@ -47,18 +85,24 @@ class align_simple:
         self.alignmentmatrix[i][j] = value
 
     def match(self):
-        for i in range(0, len(self.seq1)):
-            for j in range(0, len(self.seq2)):
+        for i in range(1, len(self.seq1) + 1):
+            for j in range(1, len(self.seq2) + 1):
+                tempScore = score(self.
+                    scores[self.scoreIndex[self.seq1[i - 1]]][self.
+                    scoreIndex[self.seq2[j - 1]]])
+                self.put(i, j, tempScore)
+
+
                 #tempScore = score(self.alignmentmatrix[i][j].getScore())
-                if (self.seq1[i: i + 1] == self.seq2[j: j + 1]):
-                    tempScore = score('M')
-                    self.put(i, j, tempScore)
-                #else:
+                #if (self.seq1[i: i + 1] == self.seq2[j: j + 1]):
+                #    tempScore = score('M')
                 #    self.put(i, j, tempScore)
+                #else:
+
 
     def sumscore(self):
-        for h in range(0, len(self.alignmentmatrix)):
-            for k in range(0, len(self.alignmentmatrix[0])):
+        for h in range(1, len(self.alignmentmatrix)):
+            for k in range(1, len(self.alignmentmatrix[0])):
                 print "sumScore - score = " + str(self.alignmentmatrix[h][k].
                 getScore())
                 if (self.alignmentmatrix[h][k].getScore() == 'M'):
@@ -112,8 +156,8 @@ class align_simple:
     def sumafter(self, y, x, new):
         print "sumAfter - Start sumAfter starting at ", x, y
         self.printmatrix()
-        for h in range(y, len(self.alignmentmatrix)):
-            for k in range(x, len(self.alignmentmatrix[0])):
+        for h in range(y, len(self.alignmentmatrix) + 1):
+            for k in range(x, len(self.alignmentmatrix[0]) + 1):
                 if (h == y) and (k == x):
                     self.alignmentmatrix[h][k] = score(new)
                 elif (self.alignmentmatrix[h][k].getScore() != 'M'):
@@ -125,18 +169,19 @@ class align_simple:
         self.printmatrix()
 
     def findRoute(self, tempFoundRoute, xIndex, yIndex):
+        tempScore = self.alignmentmatrix[xIndex][yIndex].getScore()
         print "findRoute - ", xIndex, yIndex
         if ((xIndex == 0) and (yIndex == 0)):
             print "findroute - 0,0"
-            tempFoundRoute.append([0, 0])
+            tempFoundRoute.append([0, 0, tempScore, 'S'])
         elif (xIndex == 0):
             print "findRoute - 0,y"
-            tempFoundRoute.append([xIndex, yIndex])
+            tempFoundRoute.append([xIndex, yIndex, tempScore, 'H'])
             tempFoundRoute = (self.findRoute(tempFoundRoute,
             xIndex, yIndex - 1))
         elif (yIndex == 0):
             print"findRoute - x,0"
-            tempFoundRoute.append([xIndex, yIndex])
+            tempFoundRoute.append([xIndex, yIndex, tempScore, 'V'])
             tempFoundRoute = (self.findRoute(tempFoundRoute,
             xIndex - 1, yIndex))
         else:
@@ -152,24 +197,24 @@ class align_simple:
             if ((left > above) and (left > diag)):
                 print ("findRoute - LEFT is best, adding [" + str(xIndex - 1) +
                  "," + str(yIndex) + "]")
-                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute.append([xIndex, yIndex, tempScore, 'H'])
                 tempFoundRoute = self.findRoute(tempFoundRoute,
                 xIndex, (yIndex - 1))
             elif ((above > left) and (above > diag)):
                 print ("findRoute - ABOVE is best, adding [" + str(xIndex) +
                 "," + str(yIndex - 1) + "]")
-                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute.append([xIndex, yIndex, tempScore, 'V'])
                 tempFoundRoute = self.findRoute(tempFoundRoute,
                 (xIndex - 1), yIndex)
             elif ((diag >= left) and (diag >= above)):
                 print ("findRoute - DIAG is best, adding [" + str(xIndex - 1) +
                 "," + str(yIndex - 1) + "]")
-                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute.append([xIndex, yIndex, tempScore, 'D'])
                 tempFoundRoute = self.findRoute(tempFoundRoute,
                 (xIndex - 1), (yIndex - 1))
             elif ((above == left) and (above > diag)):
                 print "findRoute - TIE is best"
-                tempFoundRoute.append([xIndex, yIndex])
+                tempFoundRoute.append([xIndex, yIndex, tempScore, 'T'])
                 tempFoundRoute = self.betterRoute(tempFoundRoute, xIndex,
                 yIndex)
                 print "tempFoundRoute-", tempFoundRoute
@@ -225,42 +270,29 @@ class align_simple:
         print "seq2 = ", self.seq2
         self.alseq1 = ""
         self.alseq2 = ""
-        for i in range(0, len(self.route) - 1):
+        for i in range(len(self.route) - 1, 0, -1):
+            print i
             print "1: " + str(self.route[i][0]) + " 2: " + str(self.route[i][1])
-            print "v1: " + str(self.route[i + 1][0] - 1) + " v2: " + str(self.
-            route[i + 1][1] - 1)
-            if (self.route[i][0] == self.route[i + 1][0] - 1):
-                print "s1 is adding " + str(self.seq1[self.route[i][0]])
-                self.alseq1 += self.seq1[self.route[i][0]]
-            elif (self.route[i][0] == self.route[i + 1][0]):
-                self.alseq1 += "*"
+            print "v1: " + str(self.route[i - 1][0] + 1) + " v2: " + str(self.
+            route[i - 1][1] + 1)
+            if ((self.route[i][0] == 0) and (self.route[i][1] == 0)):
+                break
+            elif (self.route[i][0] == self.route[i - 1][0] + 1):
+                print "s1 is adding " + str(self.seq1[self.route[i][0] - 1])
+                self.alseq1 = self.seq1[self.route[i][0] - 1] + self.alseq1
+            elif (self.route[i][0] == self.route[i - 1][0]):
+                self.alseq1 = "*" + self.alseq1
             else:
                 print "idk"
-            if (self.route[i][1] == self.route[i + 1][1] - 1):
-                print "s2 is adding " + str(self.seq2[self.route[i][1]])
-                self.alseq2 += self.seq2[self.route[i][1]]
-            elif (self.route[i][1] == self.route[i + 1][1]):
-                self.alseq2 += "*"
-            else:
-                print "idk"
-            if (len(self.route) == 1+1):
-                if (self.route[i][0] == self.route[i + 1][0] - 1):
-                print "s1 is adding " + str(self.seq1[self.route[i][0]])
-                self.alseq1 += self.seq1[self.route[i][0]]
-            elif (self.route[i][0] == self.route[i + 1][0]):
-                self.alseq1 += "*"
-            else:
-                print "idk"
-            if (self.route[i][1] == self.route[i + 1][1] - 1):
-                print "s2 is adding " + str(self.seq2[self.route[i][1]])
-                self.alseq2 += self.seq2[self.route[i][1]]
-            elif (self.route[i][1] == self.route[i + 1][1]):
-                self.alseq2 += "*"
+            if (self.route[i][1] == self.route[i - 1][1] + 1):
+                print "s2 is adding " + str(self.seq2[self.route[i][1] - 1])
+                self.alseq2 = self.seq2[self.route[i][1] - 1] + self.alseq2
+            elif (self.route[i][1] == self.route[i - 1][1]):
+                self.alseq2 = "*" + self.alseq2
             else:
                 print "idk"
         print "aligned1: ", self.alseq1
         print "aligned2: ", self.alseq2
-
 
 class score:
 
@@ -277,4 +309,4 @@ class score:
 
 
 dynpro = align_simple()
-dynpro.startAlignment("ATCT", "ATCT")
+dynpro.startAlignment("GACTTAC", "CGTGAATTCAT")
