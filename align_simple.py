@@ -72,10 +72,14 @@ class align_simple:
 
     def initMatrix(self, init):
 ###        print str(len(self.seq1)), str(len(self.seq2))
-        for char1 in range(0, len(self.seq1) + 1):
+        for y in range(0, len(self.seq1) + 1):
             tempList = []
-            for char2 in range(0, len(self.seq2) + 1):
+            for x in range(0, len(self.seq2) + 1):
                 start_score = score()
+                if(y == 0) and (x != 0):
+                    start_score.giveOrigin([y, x - 1])
+                elif(y != 0) and (x == 0):
+                    start_score.giveOrigin([y - 1, x])
                 tempList.append(start_score)
             self.alignmentmatrix.append(tempList)
 ###        self.printmatrix()
@@ -232,6 +236,7 @@ class align_simple:
         self.alseq2 = ""
         for i in range(len(self.route) - 1, 0, -1):
 ###            print i
+###            print self.route
 ###            print "1: " + str(self.route[i][0]) +" 2: "+str(self.route[i][1])
 ###            print "v1: " + str(self.route[i - 1][0] + 1) +" v2: "+str(self.
 ###            route[i - 1][1] + 1)
@@ -262,9 +267,6 @@ class score:
         self.parent = [-1, -1]
         self.gapNum = 0
 
-#    def __init__(self, newVal):
-#        self.value = newVal
-
     def changeScore(self, newValue, origination):
         self.value = newValue
         self.parent = origination
@@ -275,10 +277,14 @@ class score:
     def getOrigin(self):
         return self.parent
 
+    def giveOrigin(self, origination):
+        self.parent = origination
+
     def getGaps(self):
         return self.gapNum
 
 
 dynpro = align_simple()
-dynpro.startAlignment("PACTR", "HACA")
-print "booyah: ", dynpro.getDistance()
+dynpro.startAlignment("ASDCWVE", "ADVE")
+print "Score: ", dynpro.getDistance()
+print "Similarity: ", dynpro.getSimilarityScore()
