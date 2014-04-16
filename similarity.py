@@ -1,6 +1,17 @@
-import sys
+import sys, time
 from xml.dom import minidom
 from align2 import align2
+from multiprocessing import Pool, Queue
+
+def seqGen(sequences,pdbids,x):
+  output = []
+  for i in xrange(0,x):
+    s1 = sequences[i]
+    p1 = pdbids[i]
+    output.append((p1,s1))
+  return output
+
+infile = ""
 
 def main():
   infile = sys.argv[1]
@@ -16,46 +27,42 @@ def main():
     if sys.argv[4] == 'all':
       all = True
 
+  
+  now = time.time()
+  p = Pool(4)
+  results = p.map(doSeq,range(0,10)) 
+  for l in results:
+    out.write(l+"\n")
+  out.close()
+  print "done" ,time.time()-now
+
+
+
+def doSeq(x):
+  infile = "input_data_10.xml"
+  blosumfile = "./blosum62"
   xmldoc = minidom.parse(infile)
   
   sequences = xmldoc.getElementsByTagName('SEQUENCE')
-  pdbids = xmldoc.getElementsByTagName('PDBID')
+  seqList = map(lambda x:x.firstChild.data.encode().strip(),sequences)
 
+  pdbids = xmldoc.getElementsByTagName('PDBID')
+  pdbList = map(lambda x:x.firstChild.data.encode().strip(),pdbids)
+  
   a = align2(blosumfile)
 
-  i = 0
-  for i in xrange(len(sequences)):
-    out.write(pdbids[i].firstChild.data.encode().strip())
-    out.write(',meta')
-    s1 = sequences[i].firstChild.data.encode().strip()
-    for j in xrange(len(sequences)):
-      if all is False:
-        if i != j:
-          s2 = sequences[j].firstChild.data.encode().strip()
-          sim = a.align(s1,s2)
-          #print 'sim = ', sim
-          if sim > 0.1:
-            pdbid2 = pdbids[j].firstChild.data.encode().strip()
-            out.write(',') 
-            out.write(pdbid2) 
-            out.write(',') 
-            out.write(str(sim))
-      else:
-        s2 = sequences[j].firstChild.data.encode().strip()
-        sim = a.align(s1,s2)
-        pdbid2 = pdbids[j].firstChild.data.encode().strip()
-        out.write(',') 
-        out.write(pdbid2) 
-        out.write(',')
-        out.write(str(sim))
-    out.write('\n')
-  out.flush()
-  out.close()
-
-if __name__ == "__main__":
-    main()
-
-
+  pdb1, s1 = pdbList[x], seqList[x]
+  
+  outline = str(pdb1)+",meta"
+  for i in range(0,x):
+    pdb2, s2 = pdbList[i], seqList[i]
+    sim = a.align(s1,s2)
+    outline+=","+str(pdb2)+","+str(sim)
+  return outline
       
 
   
+
+
+if __name__ == "__main__":
+    main()
