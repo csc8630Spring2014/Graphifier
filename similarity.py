@@ -47,8 +47,9 @@ def main():
 
   print "DONE!",time.time()-now
 
-  call(["cd partialResults")
-  call(["cat * > output"])
+  os.system("cd partialResults")
+  os.system("cat *.partialResult > output.txt")
+  
 
 def worker(inQueue):
   infile = "input_data_ALL.xml"
