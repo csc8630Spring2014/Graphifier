@@ -2,6 +2,7 @@ import sys, time
 from xml.dom import minidom
 from align2 import align2
 from multiprocessing import Pool, Queue
+from subprocess import call
 
 def seqGen(sequences,pdbids,x):
   output = []
@@ -29,17 +30,16 @@ def main():
 
   
   now = time.time()
-  p = Pool(64)
-  for l in p.map(doSeq,range(0,187)):
-    out.write(l+"\n")
-  out.close()
+  p = Pool(4)
+  p.map(doSeq,range(0,10))
   print "done" ,time.time()-now
 
 
 
 def doSeq(x):
-  infile = "input_data_10.xml"
+  infile = "input_data_ALL.xml"
   blosumfile = "./blosum62"
+  outfile = str(x)+".partialResult"
   xmldoc = minidom.parse(infile)
   
   sequences = xmldoc.getElementsByTagName('SEQUENCE')
@@ -53,11 +53,14 @@ def doSeq(x):
   pdb1, s1 = pdbList[x], seqList[x]
   
   outline = str(pdb1)+",meta"
-  for i in range(0,x):
-    pdb2, s2 = pdbList[i], seqList[i]
-    sim = a.align(s1,s2)
-    outline+=","+str(pdb2)+","+str(sim)
-  return outline
+  with open(outfile,"w") as fp:
+    for i in range(0,x):
+      pdb2, s2 = pdbList[i], seqList[i]
+      sim = a.align(s1,s2)
+      outline+=","+str(pdb2)+","+str(sim)
+    fp.write(outline)
+  return True
+
       
 
   
