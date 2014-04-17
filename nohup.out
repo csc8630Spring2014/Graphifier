@@ -1,0 +1,11 @@
+1
+Traceback (most recent call last):
+  File "similarity.py", line 67, in <module>
+    main()
+  File "similarity.py", line 33, in main
+    for l in p.map(doSeq,range(0,187)):
+  File "/usr/lib64/python2.6/multiprocessing/pool.py", line 148, in map
+    return self.map_async(func, iterable, chunksize).get()
+  File "/usr/lib64/python2.6/multiprocessing/pool.py", line 422, in get
+    raise self._value
+xml.parsers.expat.ExpatError: mismatched tag: line 1497, column 2
