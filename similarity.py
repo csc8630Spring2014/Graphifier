@@ -14,12 +14,12 @@ def seqGen(sequences,pdbids,x):
 infile = ""
 
 def main():
-  infile = sys.argv[1]
+  #infile = sys.argv[1]
 
-  outfile = sys.argv[2]
+  outfile = "blah.txt"
   out = open(outfile,'w')
 
-  blosumfile = sys.argv[3]
+  #blosumfile = sys.argv[3]
 
   all = False
   print len(sys.argv)
@@ -29,9 +29,8 @@ def main():
 
   
   now = time.time()
-  p = Pool(4)
-  results = p.map(doSeq,range(0,10)) 
-  for l in results:
+  p = Pool(64)
+  for l in p.map(doSeq,range(0,187)):
     out.write(l+"\n")
   out.close()
   print "done" ,time.time()-now
